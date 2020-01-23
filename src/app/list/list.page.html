@@ -10,11 +10,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let produto of produtos">
-      Nome: {{produto.nome}} | Peso: {{produto.peso}} | Preço: {{produto.preco}}
-    </ion-item>
-  </ion-list>
+    <ion-card *ngFor="let produto of produtos">
+      <ion-card-header>
+        <ion-card-title>Nome: {{produto.nome}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Peso: {{produto.peso}} Kg<br>Preço: R$ {{produto.preco}}
+      </ion-card-content>
+    </ion-card>
+    <ion-fab-button href="/criaProduto" style="position:fixed;right:10px;bottom:10px;"><ion-icon name="add-circle-outline" style="width: 56px;height:56px;"></ion-icon></ion-fab-button>
   <!--
     <div *ngIf="selectedItem" padding>
       You navigated here from <b>{{selectedItem.title }}</b>

@@ -6,19 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['list.page.scss']
 })
 export class ListPage implements OnInit {
-  // private selectedItem: any;
-  // private icons = [
-  //   'flask',
-  //   'wifi',
-  //   'beer',
-  //   'football',
-  //   'basketball',
-  //   'paper-plane',
-  //   'american-football',
-  //   'boat',
-  //   'bluetooth',
-  //   'build'
-  // ];
   public produtos: Array<{ nome: string; peso: string; preco: string }> = [];
   constructor() {
     for (let i = 0; i < 10; i++) {
