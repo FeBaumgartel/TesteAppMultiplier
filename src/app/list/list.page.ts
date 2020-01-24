@@ -10,7 +10,6 @@ import { DbServiceService } from '../db-service.service';
 export class ListPage implements OnInit {
   public produtos: Array<{ nome: string; peso: string; preco: string }> = [];
   constructor(private dbService:DbServiceService) {
-
     for (let i = 0; i < 10; i++) {
       this.produtos.push({
         nome: 'Produto ' + i,

@@ -14,9 +14,9 @@ export class DbServiceService {
     })
       .then((db: SQLiteObject) => {
 
-        db.executeSql(`CREATE TABLE IF NOT EXISTS  produtos (
-          idLocal bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-          id bigint(20)unsigned NOT NULL,
+        db.executeSql(`CREATE TABLE IF NOT EXISTS produtos (
+          idLocal bigint unsigned AUTO_INCREMENT,
+          id bigint unsigned,
           nome varchar(255) NOT NULL,
           preco double NOT NULL,
           peso double NOT NULL,
@@ -24,45 +24,44 @@ export class DbServiceService {
           updated_at timestamp NULL DEFAULT NULL,
           deleted_at timestamp NULL DEFAULT NULL,
           synced_at timestamp NULL DEFAULT NULL,
-          PRIMARY KEY(id))`, [])
+          PRIMARY KEY(idLocal))`, [])
           .then(() => console.log('Executed SQL'))
           .catch(e => console.log(e));
 
         db.executeSql(`CREATE TABLE IF NOT EXISTS pedidos (
-          idLocal bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-          id bigint(20)unsigned NOT NULL,
+          idLocal bigint unsigned AUTO_INCREMENT,
+          id bigint unsigned,
           status varchar(255) NOT NULL,
           cliente varchar(255) NOT NULL,
-          valorTotal double NOT NULL,pesoTotal double NOT NULL,
+          valorTotal double NOT NULL,
+          pesoTotal double NOT NULL,
           quantidadeTotal double NOT NULL,
           created_at timestamp NULL DEFAULT NULL,
           updated_at timestamp NULL DEFAULT NULL,
           deleted_at timestamp NULL DEFAULT NULL,
           synced_at timestamp NULL DEFAULT NULL,
-          PRIMARY KEY (id))`, [])
+          PRIMARY KEY (idLocal))`, [])
           .then(() => console.log('Executed SQL'))
           .catch(e => console.log(e));
 
         db.executeSql(`CREATE TABLE IF NOT EXISTS pedido_produtos (
-          idLocal bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-          produto_id bigint(20) unsigned NOT NULL,
-          pedido_id bigint(20) unsigned NOT NULL,quantidade int(11) NOT NULL,
+          idLocal bigint unsigned AUTO_INCREMENT,
+          produto_id bigint unsigned NOT NULL,
+          pedido_id bigint unsigned NOT NULL,
+          quantidade int(11) NOT NULL,
           created_at timestamp NULL DEFAULT NULL,
           updated_at timestamp NULL DEFAULT NULL,
           deleted_at timestamp NULL DEFAULT NULL,
           synced_at timestamp NULL DEFAULT NULL,
-          PRIMARY KEY (produto_id,pedido_id),
-          KEY pedido_produtos_pedido_id_foreign (pedido_id),
-          CONSTRAINT pedido_produtos_pedido_id_foreign FOREIGN KEY (pedido_id) REFERENCES pedidos (id) ON DELETE CASCADE,
-          CONSTRAINT pedido_produtos_produto_id_foreign FOREIGN KEY (produto_id) REFERENCES produtos (id) ON DELETE CASCADE)`, [])
+          PRIMARY KEY (idLocal),
+          FOREIGN KEY (pedido_id) REFERENCES pedidos (id) ON DELETE CASCADE,
+          FOREIGN KEY (produto_id) REFERENCES produtos (id) ON DELETE CASCADE)`, [])
           .then(() => console.log('Executed SQL'))
           .catch(e => console.log(e));
 
-        db.executeSql('CREATE TABLE IF NOT EXISTS sincronizacao (ultima_sincronizacao timestamp NULL DEFAULT NULL', [])
+        db.executeSql('CREATE TABLE IF NOT EXISTS sincronizacao (ultima_sincronizacao timestamp DEFAULT NULL)', [])
           .then(() => console.log('Executed SQL'))
           .catch(e => console.log(e));
-
-          db.executeSql("insert into produtos (1,)")
 
         this.instance = db;
       })
