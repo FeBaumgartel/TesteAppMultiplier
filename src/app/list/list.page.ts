@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DbServiceService } from '../db-service.service';
+import { ProdutoServiceService } from '../produto-service.service';
 
 
 @Component({
@@ -9,12 +10,20 @@ import { DbServiceService } from '../db-service.service';
 })
 export class ListPage implements OnInit {
   public produtos: Array<{ nome: string; peso: string; preco: string }> = [];
-  constructor(private dbService:DbServiceService) {
-    for (let i = 0; i < 10; i++) {
+  constructor(private ProdutoService: ProdutoServiceService) {}
+
+  async ionViewWillEnter() {
+
+    var list = [];
+    await this.ProdutoService.getProdutos()
+      .then(a => {
+        list.push(a);
+      });
+    for (let i = 0; i < list[0].length; i++) {
       this.produtos.push({
-        nome: 'Produto ' + i,
-        peso: ''+i,
-        preco: ''+i
+        nome: list[0][i].nome,
+        peso: list[0][i].peso,
+        preco: list[0][i].preco
       });
     }
   }
