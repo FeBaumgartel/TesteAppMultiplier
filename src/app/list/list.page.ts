@@ -9,7 +9,7 @@ import { ProdutoServiceService } from '../produto-service.service';
   styleUrls: ['list.page.scss']
 })
 export class ListPage implements OnInit {
-  public produtos: Array<{ nome: string; peso: string; preco: string }> = [];
+  public produtos: Array<{ id: string; nome: string; peso: string; preco: string }> = [];
   constructor(private ProdutoService: ProdutoServiceService) {}
 
   async ionViewWillEnter() {
@@ -21,6 +21,7 @@ export class ListPage implements OnInit {
       });
     for (let i = 0; i < list[0].length; i++) {
       this.produtos.push({
+        id: list[0][i].id,
         nome: list[0][i].nome,
         peso: list[0][i].peso,
         preco: list[0][i].preco

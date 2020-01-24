@@ -16,5 +16,9 @@ export class CreatePage {
 
   public async createProduct() {
     await this.ProdutoService.postProdutos(this.produto);
+    this.produto.nome=null;
+    this.produto.preco=null;
+    this.produto.peso=null;
+    alert('Cadastrado');
   }
 }
