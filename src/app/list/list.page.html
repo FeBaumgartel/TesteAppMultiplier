@@ -10,30 +10,14 @@
 </ion-header>
 
 <ion-content>
-  <ion-list *ngFor="let produto of produtos">
-    <ion-item-sliding>
-      <ion-item-options side="start">
-        <ion-item-option color="success" (click)="favorite(item)">Editar</ion-item-option>
-      </ion-item-options>
-  
-      <ion-item>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Nome: {{produto.nome}}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            Peso: {{produto.peso}} Kg<br>Preço: R$ {{produto.preco}}
-          </ion-card-content>
-        </ion-card>
-      </ion-item>
-      
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="share(item)">Deletar</ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-  
-  </ion-list>
-
+  <ion-card *ngFor="let produto of produtos">
+      <ion-card-header>
+        <ion-card-title>Nome: {{produto.nome}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Peso: {{produto.peso}} Kg<br>Preço: R$ {{produto.preco}}
+      </ion-card-content>
+  </ion-card>
 
   <ion-fab-button href="/criaProduto" style="position:fixed;right:10px;bottom:10px;">
     <ion-icon name="add-circle-outline" style="width: 56px;height:56px;"></ion-icon>
