@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Produto } from '../models/produto';
 import { ProdutoServiceService } from '../produto-service.service';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -9,16 +10,28 @@ import { Router } from '@angular/router';
   templateUrl: 'update.page.html',
   styleUrls: ['update.page.scss']
 })
-export class UpdatePage {
+export class UpdatePage implements OnInit {
   protected produto: Produto = new Produto();
-
-  constructor(private ProdutoService: ProdutoServiceService, private router: Router) { }
+  id: string;
+  constructor(private ProdutoService: ProdutoServiceService, private router: Router, private route: ActivatedRoute) { }
 
   public async updateProduct() {
     await this.ProdutoService.putProdutos(this.produto);
-    this.produto.nome=null;
-    this.produto.preco=null;
-    this.produto.peso=null;
+    this.produto.nome = null;
+    this.produto.preco = null;
+    this.produto.peso = null;
     this.router.navigate(['/listaProduto']);
+  }
+
+  async ionViewWillEnter() {
+    this.id = this.route.snapshot.paramMap.get('id');
+    console.log(this.id);
+    await this.ProdutoService.getProdutoById(this.id)
+      .then(a => {
+        this.produto=a;
+      });
+  }
+  
+  ngOnInit() {
   }
 }

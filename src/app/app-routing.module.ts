@@ -16,7 +16,7 @@ const routes: Routes = [
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
   {
-    path: 'atualizaProduto',
+    path: 'atualizaProduto/:id',
     loadChildren: () => import('./update/update.module').then(m => m.UpdatePageModule)
   }
 ];
@@ -27,4 +27,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

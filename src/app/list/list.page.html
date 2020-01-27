@@ -11,17 +11,19 @@
 
 <ion-content>
   <ion-card *ngFor="let produto of produtos">
-      <ion-card-header>
-        <ion-card-title>Nome: {{produto.nome}}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        Peso: {{produto.peso}} Kg<br>Preço: R$ {{produto.preco}}
-        <ion-button color="primary" style="position: absolute;right:1%;bottom:80%" href="/atualizaProduto" >editar</ion-button>
-        <ion-button color="danger" style="position: absolute;right:1%;bottom:1%" (click)="DeleteProduct(produto.idLocal)" >excluir</ion-button>
-      </ion-card-content>
+    <ion-card-header>
+      <ion-card-title>Nome: {{produto.nome}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Peso: {{produto.peso}} Kg<br>Preço: R$ {{produto.preco}}
+      <ion-button color="primary" style="position: absolute;right:1%;bottom:80%" (click)="UpdateProduct(produto.idLocal)">editar
+      </ion-button>
+      <ion-button color="danger" style="position: absolute;right:1%;bottom:1%" (click)="DeleteProduct(produto.idLocal)">
+        excluir</ion-button>
+    </ion-card-content>
   </ion-card>
 
-  <ion-fab-button href="/criaProduto" style="position:fixed;right:10px;bottom:10px;" color="success">
+  <ion-fab-button (click)="createProduct()" style="position:fixed;right:10px;bottom:10px;" color="success">
     <ion-icon name="add" style="width: 56px;height:56px;"></ion-icon>
   </ion-fab-button>
   <!--
