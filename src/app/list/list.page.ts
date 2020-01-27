@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DbServiceService } from '../db-service.service';
 import { ProdutoServiceService } from '../produto-service.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -9,8 +9,8 @@ import { ProdutoServiceService } from '../produto-service.service';
   styleUrls: ['list.page.scss']
 })
 export class ListPage implements OnInit {
-  public produtos: Array<{ id: string; nome: string; peso: string; preco: string }> = [];
-  constructor(private ProdutoService: ProdutoServiceService) {}
+  public produtos: Array<{ idLocal:string; id: string; nome: string; peso: string; preco: string }> = [];
+  constructor(private ProdutoService: ProdutoServiceService, private router: Router) {}
 
   async ionViewWillEnter() {
 
@@ -21,12 +21,18 @@ export class ListPage implements OnInit {
       });
     for (let i = 0; i < list[0].length; i++) {
       this.produtos.push({
+        idLocal: list[0][i].idLocal,
         id: list[0][i].id,
         nome: list[0][i].nome,
         peso: list[0][i].peso,
         preco: list[0][i].preco
       });
     }
+  }
+
+  public async DeleteProduct(produtoId) {
+    await this.ProdutoService.deleteProdutos(produtoId);
+    this.router.navigate(['/listaProduto']);
   }
 
   ngOnInit() {

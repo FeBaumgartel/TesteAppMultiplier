@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'listaProduto',
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
+  },
+  {
+    path: 'atualizaProduto',
+    loadChildren: () => import('./update/update.module').then(m => m.UpdatePageModule)
   }
 ];
 

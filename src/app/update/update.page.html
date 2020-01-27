@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Alterar Produto
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-input type="hidden" [(ngModel)]="produto.idLocal" name="nome" style="position:absolute"></ion-input>
+  <ion-list lines="full" class="ion-no-margin ion-no-padding">
+    <ion-item>
+      <ion-label position="stacked">Nome <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input type="text" [(ngModel)]="produto.nome" name="nome"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Peso <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input type="number" [(ngModel)]="produto.peso" name="peso"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Preço <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input type="number" [(ngModel)]="produto.preco" name="preco"></ion-input>
+    </ion-item>
+  </ion-list>
+  <div class="ion-padding">
+    <ion-button expand="block" (click)="updateProduct()" class="ion-no-margin">Criar Produto</ion-button>
+  </div>
+</ion-content>

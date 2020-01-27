@@ -16,11 +16,13 @@
       </ion-card-header>
       <ion-card-content>
         Peso: {{produto.peso}} Kg<br>Preço: R$ {{produto.preco}}
+        <ion-button color="primary" style="position: absolute;right:1%;bottom:80%" href="/atualizaProduto" >editar</ion-button>
+        <ion-button color="danger" style="position: absolute;right:1%;bottom:1%" (click)="DeleteProduct(produto.idLocal)" >excluir</ion-button>
       </ion-card-content>
   </ion-card>
 
-  <ion-fab-button href="/criaProduto" style="position:fixed;right:10px;bottom:10px;">
-    <ion-icon name="add-circle-outline" style="width: 56px;height:56px;"></ion-icon>
+  <ion-fab-button href="/criaProduto" style="position:fixed;right:10px;bottom:10px;" color="success">
+    <ion-icon name="add" style="width: 56px;height:56px;"></ion-icon>
   </ion-fab-button>
   <!--
     <div *ngIf="selectedItem" padding>
