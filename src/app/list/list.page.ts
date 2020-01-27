@@ -24,7 +24,7 @@ export class ListPage implements OnInit {
 
   public async DeleteProduct(produtoId) {
     await this.ProdutoService.deleteProdutos(produtoId);
-    this.router.navigate(['/listaProduto']);
+    this.ionViewWillEnter();
   }
 
   public async UpdateProduct(id){

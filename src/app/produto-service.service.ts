@@ -60,7 +60,9 @@ export class ProdutoServiceService {
   public async deleteProdutos(produtoId) {
     const db = this.dbService.instance;
     await db.executeSql(`update produtos set deleted_at = '` + new Date().toLocaleDateString() + `' where idLocal = ` + produtoId, [])
-      .then(() => { console.log('Deletado'); })
+      .then(() => {
+        console.log('Deletado');
+      })
       .catch(e => console.log(e));
   }
 
