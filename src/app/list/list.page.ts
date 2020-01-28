@@ -3,7 +3,6 @@ import { ProdutoServiceService } from '../produto-service.service';
 import { Router } from '@angular/router';
 import { Produto } from '../models/produto';
 
-
 @Component({
   selector: 'app-list',
   templateUrl: 'list.page.html',
@@ -14,12 +13,11 @@ export class ListPage implements OnInit {
   constructor(private ProdutoService: ProdutoServiceService, private router: Router) { }
 
   async ionViewWillEnter() {
-
+    this.ProdutoService.sincCloudProducts();
     await this.ProdutoService.getProdutos()
       .then(a => {
-        this.produtos=a;
+        this.produtos = a;
       });
-    
   }
 
   public async DeleteProduct(produtoId) {
@@ -27,18 +25,16 @@ export class ListPage implements OnInit {
     this.ionViewWillEnter();
   }
 
-  public async UpdateProduct(id){
-    this.router.navigate(['/atualizaProduto/'+id]);
+  public async UpdateProduct(id) {
+    this.router.navigate(['/atualizaProduto/' + id]);
   }
 
-  public async createProduct(){
+  public async createProduct() {
     this.router.navigate(['/criaProduto']);
   }
 
+  
+
   ngOnInit() {
   }
-  // add back when alpha.4 is out
-  // navigate(item) {
-  //   this.router.navigate(['/list', JSON.stringify(item)]);
-  // }
 }

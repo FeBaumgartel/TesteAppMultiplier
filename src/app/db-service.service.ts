@@ -58,6 +58,7 @@ export class DbServiceService {
 
         db.executeSql(`CREATE TABLE IF NOT EXISTS sincronizacao (
           idLocal integer primary key AUTOINCREMENT,
+          id integer,
           sincronizacao timestamp DEFAULT NULL)`, [])
           .then(() => console.log('Executed SQL'))
           .catch(e => console.log(e));
