@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProdutoServiceService } from '../produto-service.service';
 import { Router } from '@angular/router';
 import { Produto } from '../models/produto';
+import { SincronizacaoServiceService } from '../sincronizacao-service.service';
 
 @Component({
   selector: 'app-list',
@@ -10,10 +11,12 @@ import { Produto } from '../models/produto';
 })
 export class ListPage implements OnInit {
   public produtos: Array<Produto> = [];
-  constructor(private ProdutoService: ProdutoServiceService, private router: Router) { }
+  constructor(private ProdutoService: ProdutoServiceService, private SincronizacaoService: SincronizacaoServiceService, private router: Router) { }
 
   async ionViewWillEnter() {
-    this.ProdutoService.sincCloudProducts();
+    await this.ProdutoService.syncLocalProducts();
+    await this.ProdutoService.syncCloudProducts();
+    await this.SincronizacaoService.AddSync();
     await this.ProdutoService.getProdutos()
       .then(a => {
         this.produtos = a;

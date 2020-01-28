@@ -63,10 +63,6 @@ export class DbServiceService {
           .then(() => console.log('Executed SQL'))
           .catch(e => console.log(e));
 
-        // db.executeSql(`insert into produtos (nome, preco, peso) values ('arroz',1.1,1.1)`, [])
-        // .then(() => console.log('Executed SQL'))
-        // .catch(e => console.log(e));
-
         this.instance = db;
       })
       .catch(e => console.log(e));
