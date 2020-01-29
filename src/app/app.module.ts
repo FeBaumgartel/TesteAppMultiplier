@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
+import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -24,7 +25,8 @@ import { HTTP } from '@ionic-native/http/ngx';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SQLite,
-    HTTP
+    HTTP,
+    SpinnerDialog
   ],
   bootstrap: [AppComponent]
 })

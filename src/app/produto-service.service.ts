@@ -2,35 +2,55 @@ import { Injectable } from '@angular/core';
 import { DbServiceService } from './db-service.service';
 import { Produto } from './models/produto';
 import * as moment from 'moment';
-import { HTTP } from '@ionic-native/http/ngx';
-
+import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProdutoServiceService {
+  public listIdsDeletados = [];
   public produtos: Array<Produto> = [];
+  public produtosSync: Array<{ nome: string, peso: number, preco: number }> = [];
   constructor(private dbService: DbServiceService, private http: HTTP) { }
 
-  public async syncCloudProducts() {
+  public async syncProducts() {
     const db = this.dbService.instance;
-    var produtos: Array<Produto>;
-    this.http.get('http://192.168.18.164:8000/api/produto', {}, {})
-      .then(data => {
+    var produtos = new Array<Produto>();
+
+    //   await db.executeSql(`select * from produtos where deleted_at IS NULL `, [])
+    //     .then(a => {
+    //       for (let i = 0; i < a.rows.length; i++) {
+    //         const produto = a.rows.item(i);
+    //         this.produtosSync.push({
+    //           nome: produto.nome,
+    //           peso: produto.peso,
+    //           preco: produto.preco
+    //         });
+    //       }
+    //     })
+    //     .catch(e => console.log(e));
+    //   await this.http.get('http://192.168.18.164:8000/api/produto', { produtos: this.produtosSync }, {})
+    await this.http.get('http://192.168.18.164:8000/api/produto', {}, {})
+      .then(async (data) => {
         produtos = JSON.parse(data.data).data;
-        console.log(produtos);
-        produtos.forEach(element => {
-          db.executeSql(`select * from produtos where deleted_at IS NULL AND id = ${element.id} limit 1`, [])
-            .then(a => {
-              for (let j = 0; j < a.rows.length; j++) {
-                const produto = a.rows.item(j);
-                db.executeSql(`update produtos set nome = '${produtos[j].nome}', preco = '${produtos[j].preco}', peso = '${produtos[j].peso}', created_at = '${produtos[j].created_at}', updated_at = '${produtos[j].updated_at}' where idLocal = '${produto.idLocal}'`, [])
+        for (let i = 0; i < produtos.length; i++) {
+          await db.executeSql(`select * from produtos where deleted_at IS NULL AND id = ${produtos[i].id} limit 1`, [])
+            .then(async (a) => {
+              if (a.rows.length > 0) {
+                for (let j = 0; j < a.rows.length; j++) {
+                  const produto = a.rows.item(j);
+                  await db.executeSql(`update produtos set nome = '${produtos[i].nome}', preco = '${produtos[i].preco}', peso = '${produtos[i].peso}', created_at = '${produtos[i].created_at}', updated_at = '${produtos[i].updated_at}' where idLocal = '${produto.idLocal}'`, [])
+                    .then(a => { })
+                    .catch(e => console.log(e));
+                }
+              } else {
+                await db.executeSql(`insert into produtos (id,nome,preco,peso,created_at,updated_at) values (${produtos[i].id},'${produtos[i].nome}', '${produtos[i].preco}', '${produtos[i].peso}', '${produtos[i].created_at}', '${produtos[i].updated_at}')`, [])
                   .then(a => { })
                   .catch(e => console.log(e));
               }
             })
             .catch(e => console.log(e));
-        });
+        }
       })
       .catch(error => {
         console.log(error.status);
@@ -38,57 +58,19 @@ export class ProdutoServiceService {
       });
   }
 
-  public async syncLocalProducts() {
-    const db = this.dbService.instance;
-    var maxSync;
-    this.produtos = new Array<Produto>();
-    db.executeSql(`select max(sincronizacao) from sincronizacao`, [])
-      .then(a => {
-        for (let i = 0; i < a.rows.length; i++) {
-          maxSync = a.rows.item(i);
-        }
-      })
-      .catch(e => console.log(e));
-
-    db.executeSql(`select * from produtos where deleted_at IS NULL AND updated_at = '${maxSync}'`, [])
-      .then(a => {
-        for (let i = 0; i < a.rows.length; i++) {
-          const produto = a.rows.item(i);
-          this.produtos.push({
-            idLocal: produto.idLocal,
-            id: produto.id,
-            nome: produto.nome,
-            peso: produto.peso,
-            preco: produto.preco,
-            created_at: produto.created_at,
-            updated_at: produto.updated_at,
-            deleted_at: produto.deleted_at
-          });
-        }
-      })
-      .catch(e => console.log(e));
-
-    var json = JSON.stringify(this.produtos);
-    this.http.post('http://192.168.18.164:8000/api/produto', { json }, {})
-      .then(data => {
-        var produtos = JSON.parse(data.data).data;
-        for (let i = 0; i < produtos.length; i++) {
-          db.executeSql(`update produtos set id=${produtos[i].id}, updated_at = '%{produtos[i].updated_at}', created_at = '${produtos[i].created_at}' where idLocal = ${produtos[i].idLocal}`, [])
-            .then(() => { })
-            .catch(e => console.log(e));
-        }
-      })
-      .catch(e => console.log(e));
-  }
-
   public async syncDeletedProducts() {
     const db = this.dbService.instance;
-    this.http.post('http://192.168.18.164:8000/api/produto/deleted', {}, {})
-      .then(data => {
+    await db.executeSql(`select * from produtos where deleted_at IS NOT NULL AND`, [])
+      .then(() => { })
+      .catch(e => console.log(e));
+    await this.http.get('http://192.168.18.164:8000/api/produto/deleted', {}, {})
+      .then(async (data) => {
         var produtos = JSON.parse(data.data).data;
         for (let i = 0; i < produtos.length; i++) {
-          db.executeSql(`delete from produtos where id = ${produtos[i].id}`, [])
-            .then(() => { })
+          await db.executeSql(`delete from produtos where id = ${produtos[i].id}`, [])
+            .then(async (data) => {
+              produtos = JSON.parse(data.data).data;
+            })
             .catch(e => console.log(e));
         }
       })
@@ -149,8 +131,18 @@ export class ProdutoServiceService {
       .then(() => { console.log('Incluido'); })
       .catch(e => console.log(e));
   }
+
   public async deleteProdutos(produtoId) {
     const db = this.dbService.instance;
+    await db.executeSql(`select * from produtos where idLocal = ${produtoId}`, [])
+      .then(a => {
+        var produto = new Produto();
+        for (let i = 0; i < a.rows.length; i++) {
+          produto = a.rows.item(i);
+          this.listIdsDeletados.push(produto.id);
+        }
+      })
+      .catch(e => console.log(e));
     await db.executeSql(`update produtos set deleted_at = '${moment().format('YYYY-MM-DD HH:MM:SS')}' where idLocal = ${produtoId}`, [])
       .then(() => {
         console.log('Deletado');
