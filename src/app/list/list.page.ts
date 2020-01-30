@@ -19,16 +19,16 @@ export class ListPage implements OnInit {
     this.produtos = [];
     this.ProdutoService.getProdutos()
       .then(a => {
-        console.log(a);
         this.produtos = a;
         this.spinnerDialog.hide();
       });
   }
   public async Sync() {
-
+    this.spinnerDialog.show();
     // await this.SincronizacaoService.AddSync();
-    await this.ProdutoService.syncCloudDeletedProducts();
     await this.ProdutoService.syncProducts();
+    await this.ProdutoService.syncDeletedProducts();
+    this.spinnerDialog.hide();
     this.ionViewWillEnter();
   }
   public async DeleteProduct(produtoId) {

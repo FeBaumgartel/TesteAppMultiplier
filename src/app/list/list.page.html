@@ -23,20 +23,20 @@
       </ion-button>
     </ion-card-content>
   </ion-card>
-
-  <ion-fab vertical="bottom" horizontal="start">
-    <ion-fab-button (click)="Sync()">
-      <ion-icon name="sync"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-  <ion-fab vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="createProduct()" color="success">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
   <!--
     <div *ngIf="selectedItem" padding>
       You navigated here from <b>{{selectedItem.title }}</b>
     </div>
   -->
 </ion-content>
+
+<ion-fab vertical="bottom" horizontal="start">
+  <ion-fab-button (click)="Sync()">
+    <ion-icon name="sync"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+<ion-fab vertical="bottom" horizontal="end">
+  <ion-fab-button (click)="createProduct()" color="success">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
