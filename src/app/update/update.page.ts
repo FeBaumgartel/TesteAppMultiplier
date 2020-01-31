@@ -25,7 +25,6 @@ export class UpdatePage implements OnInit {
 
   async ionViewWillEnter() {
     this.id = this.route.snapshot.paramMap.get('id');
-    console.log(this.id);
     await this.ProdutoService.getProdutoById(this.id)
       .then(a => {
         this.produto=a;

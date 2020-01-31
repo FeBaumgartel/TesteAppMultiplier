@@ -13,24 +13,23 @@ import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 export class ListPage implements OnInit {
 
   public produtos: Array<Produto> = [];
-  private inicio;
-  private fim;
+  private pagina;
   constructor(private ProdutoService: ProdutoServiceService, private SincronizacaoService: SincronizacaoServiceService, private router: Router, private spinnerDialog: SpinnerDialog) {
 
   }
 
   async ionViewWillEnter() {
+    this.pagina = 1;
     this.spinnerDialog.show();
-    this.inicio = 0;
-    this.fim = 9;
     this.produtos = [];
     this.addProdutos();
   }
   public async Sync() {
+    this.pagina = 1;
     this.spinnerDialog.show();
     // await this.SincronizacaoService.AddSync();
-    await this.ProdutoService.syncProducts();
     await this.ProdutoService.syncDeletedProducts();
+    await this.ProdutoService.syncProducts();
     this.spinnerDialog.hide();
     this.ionViewWillEnter();
   }
@@ -49,25 +48,21 @@ export class ListPage implements OnInit {
 
   loadData(event) {
     setTimeout(() => {
-      console.log('Done');
       this.addProdutos();
       event.target.complete();
     }, 500);
   }
 
   async addProdutos() {
-    await this.ProdutoService.getProdutos()
-      .then(async(a) => {
-        console.log(this.inicio);
-        console.log(this.fim);
-        var inserir = a.slice(this.inicio, this.fim);
-        console.log(inserir);
-        for (let i = 0; i < inserir.length; i++) {
-          await this.produtos.push(inserir[i]);
+    await this.ProdutoService.getProdutos(this.pagina)
+      .then(async (a) => {
+        console.log(this.produtos);
+        for (let i = 0; i < a.length; i++) {
+          await this.produtos.push(a[i]);
         }
       });
-    this.inicio += 10;
-    this.fim += 10;
+    this.pagina++;
+
     this.spinnerDialog.hide();
   }
 

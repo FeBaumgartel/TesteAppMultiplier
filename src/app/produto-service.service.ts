@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DbServiceService } from './db-service.service';
 import { Produto } from './models/produto';
 import * as moment from 'moment';
-import { HTTP, HTTPResponse } from '@ionic-native/http/ngx';
+import { HTTP } from '@ionic-native/http/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,8 @@ export class ProdutoServiceService {
             id: produto.id,
             nome: produto.nome,
             peso: produto.peso,
-            preco: produto.preco
+            preco: produto.preco,
+            updated_at: produto.updated_at
           });
           await this.http.post('http://192.168.18.164:8000/api/produto', { produtos: this.produtosSync }, {})
             .then(async (a) => {
@@ -85,11 +86,11 @@ export class ProdutoServiceService {
         if (produtos.length > 0) {
           await this.http.post('http://192.168.18.164:8000/api/produto/delete', { produtos: produtos }, {})
             .then(async (a) => {
-              produtos.forEach(async(element) => {
+              produtos.forEach(async (element) => {
                 await db.executeSql(`delete from produtos where idLocal = '${element.idLocal}'`, [])
-                .then(async a => {
-                })
-                .catch(e => console.log(e));
+                  .then(async a => {
+                  })
+                  .catch(e => console.log(e));
               });
             })
             .catch(e => console.log(e));
@@ -109,10 +110,11 @@ export class ProdutoServiceService {
       .catch(e => console.log(e));
   }
 
-  public async getProdutos() {
+  public async getProdutos(pagina: number = 1) {
     const db = this.dbService.instance;
     this.produtos = new Array<Produto>();
-    await db.executeSql(`select * from produtos where deleted_at IS NULL`, [])
+    var offset = (pagina - 1) * 10;
+    await db.executeSql(`select * from produtos where deleted_at IS NULL limit 10 offset ${offset}`, [])
       .then(a => {
         for (let i = 0; i < a.rows.length; i++) {
           const produto = a.rows.item(i);
@@ -129,6 +131,7 @@ export class ProdutoServiceService {
         }
       })
       .catch(e => console.log(e));
+
     return this.produtos;
   }
 
@@ -199,6 +202,7 @@ export class ProdutoServiceService {
         }
       })
       .catch(e => console.log(e));
+
     return list;
   }
 }
